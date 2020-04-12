@@ -30,7 +30,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/vue-promised'],
   /*
    ** Nuxt.js dev-modules
    */
@@ -45,13 +45,16 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    'portal-vue/nuxt'
   ],
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: 'https://pokeapi.co/api/v2'
+  },
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
