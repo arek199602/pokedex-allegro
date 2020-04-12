@@ -1,11 +1,28 @@
 <template>
-  <v-app>
-    <v-container>
-      <nuxt />
-    </v-container>
+  <v-app id="pokedex">
+    <navigation-drawer :drawer="drawer" @input="drawer = $event" />
+    <app-bar @toggleDrawer="drawer = !drawer" />
+
+    <v-content>
+      <v-container>
+        <nuxt />
+      </v-container>
+    </v-content>
   </v-app>
 </template>
 
 <script>
-export default {}
+import AppBar from '~/components/AppBar'
+import NavigationDrawer from '~/components/NavigationDrawer'
+export default {
+  components: {
+    AppBar,
+    NavigationDrawer
+  },
+  data() {
+    return {
+      drawer: false
+    }
+  }
+}
 </script>
