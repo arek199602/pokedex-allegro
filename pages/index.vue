@@ -3,7 +3,11 @@
     <v-col>
       <fetch-json :url="url">
         <template v-slot:component="{ response: { data: pokemons } }">
-          <pokemon-list :pokemons="pokemons.results" />
+          <pokemon-list
+            :limit="limit"
+            :pokemons="pokemons"
+            @pageChanged="changeUrl"
+          />
         </template>
       </fetch-json>
       <floating-button />
@@ -20,12 +24,21 @@ export default {
   components: {
     FetchJson,
     FloatingButton,
-    // eslint-disable-next-line vue/no-unused-components
     PokemonList
   },
   data() {
     return {
-      url: '/pokemon'
+      url: '/pokemon',
+      limit: 20
+    }
+  },
+  methods: {
+    changeUrl(page) {
+      if (page === 1) {
+        this.url = '/pokemon'
+      } else {
+        this.url = `/pokemon/?limit=${this.limit}&offset=${this.limit * page}`
+      }
     }
   }
 }

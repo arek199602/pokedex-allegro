@@ -1,86 +1,118 @@
 <template>
-  <v-list dense>
-    <fetch-json
-      v-for="(pokemon, index) in pokemons"
-      :key="index"
-      :url="pokemon.url"
-    >
-      <template v-slot:component="{ response: { data } }">
-        <fetch-json :url="data.species.url">
-          <template v-slot:component="{ response: { data: { color } } }">
-            <v-row no-gutters dense :class="color.name">
-              <v-col cols="9">
-                <v-row no-gutters dense>
-                  <v-col cols="2">
-                    <span class="mx-2"> #{{ data.id }} </span>
-                  </v-col>
-                  <v-col cols="4">
-                    {{ data.name }}
-                  </v-col>
-                  <v-col
-                    cols="3"
-                    class="d-flex justify-space-between px-1"
-                    offset="2"
-                  >
-                    <v-icon
-                      v-if="isStarActive(data.id)"
-                      class="pl-2"
-                      @click="switchStar(data.id, false)"
+  <v-row no-gutters>
+    <v-col>
+      <fetch-json
+        v-for="(pokemon, index) in pokemons.results"
+        :key="index"
+        :url="pokemon.url"
+      >
+        <template v-slot:component="{ response: { data } }">
+          <fetch-json :url="data.species.url">
+            <template v-slot:component="{ response: { data: { color } } }">
+              <v-row no-gutters>
+                <v-col id="info" cols="9" :class="color.name">
+                  <v-row no-gutters dense>
+                    <v-col cols="2">
+                      <span
+                        class="mx-2"
+                        :class="`${color.name}--text text--darken-4`"
+                      >
+                        #{{ data.id }}
+                      </span>
+                    </v-col>
+                    <v-col cols="4">
+                      <span
+                        class="text-uppercase"
+                        :class="`${color.name}--text text--darken-4`"
+                      >
+                        {{ data.name }}
+                      </span>
+                    </v-col>
+                    <v-col
+                      cols="3"
+                      class="d-flex justify-space-between px-1"
+                      offset="2"
                     >
-                      mdi-star
-                    </v-icon>
-                    <v-icon
-                      v-else
-                      class="pl-2"
-                      @click="switchStar(data.id, true)"
+                      <v-icon
+                        v-if="isStarActive(data.id)"
+                        :color="`${color.name} darken-3`"
+                        @click="switchStar(data.id, false)"
+                      >
+                        mdi-star
+                      </v-icon>
+                      <v-icon
+                        v-else
+                        :color="`${color.name} darken-3`"
+                        @click="switchStar(data.id, true)"
+                      >
+                        mdi-star-outline
+                      </v-icon>
+                      <v-icon
+                        v-if="isCircleActive(data.id)"
+                        :color="`${color.name} darken-3`"
+                        @click="switchCircle(data.id, false)"
+                      >
+                        mdi-checkbox-marked-circle
+                      </v-icon>
+                      <v-icon
+                        v-else
+                        :color="`${color.name} darken-3`"
+                        @click="switchCircle(data.id, true)"
+                      >
+                        mdi-checkbox-blank-circle-outline
+                      </v-icon>
+                    </v-col>
+                  </v-row>
+                  <v-row no-gutters dense>
+                    <v-col
+                      v-for="(item, index) in data.types"
+                      :key="index"
+                      :cols="cols(data.types.length)"
                     >
-                      mdi-star-outline
-                    </v-icon>
-                    <v-icon
-                      v-if="isCircleActive(data.id)"
-                      class="pl-2"
-                      @click="switchCircle(data.id, false)"
-                    >
-                      mdi-checkbox-marked-circle
-                    </v-icon>
-                    <v-icon
-                      v-else
-                      class="pl-2"
-                      @click="switchCircle(data.id, true)"
-                    >
-                      mdi-checkbox-blank-circle-outline
-                    </v-icon>
-                  </v-col>
-                </v-row>
-                <v-row no-gutters dense>
-                  <v-col
-                    v-for="(item, index) in data.types"
-                    :key="index"
-                    :cols="cols(data.types.length)"
-                  >
-                    <v-chip
-                      small
-                      outlined
-                      dark
-                      class="d-flex justify-center mx-2"
-                    >
-                      {{ item.type.name }}
-                    </v-chip>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-chip small> Atak: {{ attack(data.stats) }} </v-chip>
-                  </v-col>
-                </v-row>
-              </v-col>
-              <v-col cols="3">
-                <v-img height="64" :src="data.sprites.front_default" />
-              </v-col>
-            </v-row>
-          </template>
-        </fetch-json>
-      </template>
-    </fetch-json>
-  </v-list>
+                      <v-chip
+                        small
+                        outlined
+                        :color="`${color.name} darken-4`"
+                        class="d-flex justify-center mx-2 text-uppercase"
+                      >
+                        {{ item.type.name }}
+                      </v-chip>
+                    </v-col>
+                    <v-col cols="3">
+                      <v-chip small dark :color="`${color.name} darken-2`">
+                        Atak: {{ attack(data.stats) }}
+                      </v-chip>
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col id="img" cols="3" :class="`${color.name}`">
+                  <v-img
+                    height="64"
+                    contain
+                    position="center center"
+                    :class="`${color.name} lighten-3`"
+                    class="pokemon-img"
+                    :src="
+                      `https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`
+                    "
+                  />
+                </v-col>
+              </v-row>
+            </template>
+          </fetch-json>
+        </template>
+      </fetch-json>
+    </v-col>
+    <v-col>
+      <div class="text-center">
+        <v-pagination
+          v-model="page"
+          :length="numberOfPages"
+          @input="$emit('pageChanged', $event)"
+        ></v-pagination>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -91,12 +123,19 @@ export default {
     FetchJson
   },
   props: {
-    pokemons: { required: true, type: Array }
+    pokemons: { required: true, type: Object },
+    limit: { required: true, type: Number }
   },
   data() {
     return {
       stars: [],
-      circles: []
+      circles: [],
+      page: 1
+    }
+  },
+  computed: {
+    numberOfPages() {
+      return Math.floor(this.pokemons.count / this.limit)
     }
   },
   methods: {
@@ -133,7 +172,17 @@ export default {
 <style scoped lang="scss">
 .row {
   margin: 0.25rem;
-  border-radius: 8px;
   color: white;
+  #info {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  #img {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+}
+.pokemon-img {
+  border-radius: 50% 8px 8px 50%;
 }
 </style>

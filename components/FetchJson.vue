@@ -1,20 +1,14 @@
 <template>
   <Promised :promise="promise">
     <!-- Use the "pending" slot to display a loading message -->
-    <template v-slot:pending>
-      <slot name="loader">
-        <p>Loading...</p>
-      </slot>
-    </template>
-    <!-- The default scoped slot will be used as the result -->
-    <template v-slot="data">
-      <slot name="component" :response="data"> </slot>
-    </template>
-    <!-- The "rejected" scoped slot will be used if there is an error -->
-    <template v-slot:rejected="error">
-      <slot name="error">
-        <p>Error: {{ error.message }}</p>
-      </slot>
+    <template v-slot:combined="{ isPending, isDelayOver, data, error }">
+      <template slot="loader">
+        <p v-if="isPending && isDelayOver">Loading...</p>
+      </template>
+      <slot v-if="data" name="component" :response="data" />
+      <template slot="error">
+        <p v-if="error">Error: {{ error.message }}</p>
+      </template>
     </template>
   </Promised>
 </template>
