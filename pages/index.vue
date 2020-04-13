@@ -7,10 +7,11 @@
             :limit="limit"
             :pokemons="pokemons"
             @pageChanged="changeUrl"
+            @paginationWasIntersected="toggleFloatingButton = $event"
           />
         </template>
       </fetch-json>
-      <floating-button />
+      <floating-button :hide="toggleFloatingButton" />
     </v-col>
   </v-row>
 </template>
@@ -29,7 +30,8 @@ export default {
   data() {
     return {
       url: '/pokemon',
-      limit: 20
+      limit: 20,
+      toggleFloatingButton: false
     }
   },
   methods: {

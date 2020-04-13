@@ -1,11 +1,13 @@
 <template>
   <Promised :promise="promise">
-    <!-- Use the "pending" slot to display a loading message -->
-    <template v-slot:combined="{ isPending, isDelayOver, data, error }">
-      <template slot="loader">
-        <p v-if="isPending && isDelayOver">Loading...</p>
-      </template>
-      <slot v-if="data" name="component" :response="data" />
+    <template v-slot:combined="{ isPending, data, error }">
+      <slot v-if="isPending">
+        <v-skeleton-loader
+          class="mx-auto"
+          type="list-item-three-line"
+        ></v-skeleton-loader>
+      </slot>
+      <slot v-if="!isPending" name="component" :response="data" />
       <template slot="error">
         <p v-if="error">Error: {{ error.message }}</p>
       </template>
@@ -19,20 +21,9 @@ export default {
   props: {
     url: { required: true, type: String }
   },
-  data() {
-    return {
-      promise: null
-    }
-  },
-  watch: {
-    url: {
-      immediate: true,
-      handler: 'fetchJson'
-    }
-  },
-  methods: {
-    fetchJson() {
-      this.promise = this.$axios.get(this.url)
+  computed: {
+    promise() {
+      return this.$axios.get(this.url)
     }
   }
 }

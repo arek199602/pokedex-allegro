@@ -1,7 +1,7 @@
 <template>
   <v-speed-dial v-model="open" fixed bottom right>
     <template v-slot:activator>
-      <v-btn color="#40637f" dark fab>
+      <v-btn color="#40637f" dark fab :class="animation">
         <v-icon v-if="open">mdi-close</v-icon>
         <v-icon v-else>mdi-pokeball</v-icon>
       </v-btn>
@@ -21,12 +21,48 @@
 <script>
 export default {
   name: 'FloatingButton',
+  props: {
+    hide: { type: Boolean, default: false }
+  },
   data() {
     return {
       open: false
+    }
+  },
+  computed: {
+    animation() {
+      return {
+        hide: this.hide,
+        show: !this.hide
+      }
     }
   }
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.show {
+  transform: scale(0);
+  animation: zoomIn 500ms forwards;
+}
+.hide {
+  transform: scale(1);
+  animation: zoomOut 500ms forwards;
+}
+@keyframes zoomIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+</style>

@@ -95,7 +95,20 @@
                     :src="
                       `https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`
                     "
-                  />
+                  >
+                    <template v-slot:placeholder>
+                      <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                      >
+                        <v-progress-circular
+                          indeterminate
+                          color="grey lighten-5"
+                        ></v-progress-circular>
+                      </v-row>
+                    </template>
+                  </v-img>
                 </v-col>
               </v-row>
             </template>
@@ -107,6 +120,7 @@
       <div class="text-center">
         <v-pagination
           v-model="page"
+          v-intersect="onIntersect"
           :length="numberOfPages"
           @input="$emit('pageChanged', $event)"
         ></v-pagination>
@@ -164,6 +178,9 @@ export default {
     },
     cols(numberOfItems) {
       return (numberOfItems === 1 && 8) || (numberOfItems === 2 && 4)
+    },
+    onIntersect(entries) {
+      this.$emit('paginationWasIntersected', entries[0].isIntersecting)
     }
   }
 }
