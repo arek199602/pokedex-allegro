@@ -9,7 +9,7 @@
     <v-btn fab small>
       <v-icon>mdi-magnify</v-icon>
     </v-btn>
-    <v-btn fab small>
+    <v-btn fab small @click="openFilter(true)">
       <v-icon>mdi-filter</v-icon>
     </v-btn>
     <v-btn fab small>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('filter')
 export default {
   name: 'FloatingButton',
   props: {
@@ -36,6 +38,9 @@ export default {
         show: !this.hide
       }
     }
+  },
+  methods: {
+    ...mapActions(['openFilter'])
   }
 }
 </script>

@@ -1,16 +1,30 @@
 <template>
   <v-app-bar color="white" app clipped dense>
-    <v-app-bar-nav-icon @click="$emit('toggleDrawer')" />
+    <v-app-bar-nav-icon v-if="!isFilterOpen" @click="$emit('toggleDrawer')" />
+    <v-app-bar-nav-icon v-else @click="openFilter(false)">
+      <v-icon>
+        mdi-arrow-left
+      </v-icon>
+    </v-app-bar-nav-icon>
 
-    <v-toolbar-title>Pokedex</v-toolbar-title>
+    <autocomplete v-if="isFilterOpen" />
+    <v-toolbar-title v-else>Pokedex</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
-    <v-btn icon @click="toggleFavourite = !toggleFavourite">
+    <v-btn
+      v-if="!isFilterOpen"
+      icon
+      @click="toggleFavourite = !toggleFavourite"
+    >
       <v-icon :color="favouriteColor">mdi-star-circle</v-icon>
     </v-btn>
 
-    <v-btn icon @click="toggleListOfCaught = !toggleListOfCaught">
+    <v-btn
+      v-if="!isFilterOpen"
+      icon
+      @click="toggleListOfCaught = !toggleListOfCaught"
+    >
       <v-icon :color="listOfCaughtColor">
         mdi-checkbox-multiple-marked-circle
       </v-icon>
@@ -33,8 +47,14 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+import Autocomplete from './Autocomplete'
+const { mapGetters, mapActions } = createNamespacedHelpers('filter')
 export default {
   name: 'AppBar',
+  components: {
+    Autocomplete
+  },
   data() {
     return {
       options: [
@@ -48,12 +68,16 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['isFilterOpen']),
     favouriteColor() {
       return this.toggleFavourite ? 'yellow' : ''
     },
     listOfCaughtColor() {
       return this.toggleListOfCaught ? 'green' : ''
     }
+  },
+  methods: {
+    ...mapActions(['openFilter'])
   }
 }
 </script>
