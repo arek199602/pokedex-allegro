@@ -10,49 +10,51 @@
           <fetch-json :url="data.species.url">
             <template v-slot:component="{ response: { data: { color } } }">
               <v-row no-gutters>
-                <v-col id="info" cols="9" :class="color.name">
-                  <v-row no-gutters dense>
-                    <v-col cols="2">
+                <v-col id="info" cols="9" :class="getColor(color.name)">
+                  <v-row no-gutters dense justify="space-between">
+                    <v-col cols="auto">
                       <span
                         class="mx-2"
-                        :class="`${color.name}--text text--darken-4`"
+                        :class="`${getColor(color.name)}--text text--darken-4`"
                       >
-                        #{{ data.id }}
+                        #{{ String(data.id).padStart(3, '0') }}
                       </span>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="5">
                       <span
                         class="text-uppercase"
-                        :class="`${color.name}--text text--darken-4`"
+                        :class="`${getColor(color.name)}--text text--darken-4`"
                       >
                         {{ data.name }}
                       </span>
                     </v-col>
                     <v-col
-                      cols="3"
+                      cols="auto"
                       class="d-flex justify-space-between px-1"
-                      offset="2"
                     >
-                      <icons :id="data.id" :color="color.name" />
+                      <icons :id="data.id" :color="getColor(color.name)" />
                     </v-col>
                   </v-row>
-                  <v-row no-gutters dense>
-                    <v-col
-                      v-for="item in data.types"
-                      :key="item.type.name"
-                      :cols="cols(data.types.length)"
-                    >
-                      <type :color="color.name" :name="item.type.name" />
+                  <v-row no-gutters dense justify="space-between">
+                    <v-col v-for="item in data.types" :key="item.type.name">
+                      <type
+                        :color="getColor(color.name)"
+                        :name="item.type.name"
+                      />
                     </v-col>
-                    <v-col cols="3">
-                      <v-chip small dark :color="`${color.name} darken-2`">
+                    <v-col cols="auto">
+                      <v-chip
+                        small
+                        dark
+                        :color="`${getColor(color.name)} darken-2`"
+                      >
                         Atak: {{ attack(data.stats) }}
                       </v-chip>
                     </v-col>
                   </v-row>
                 </v-col>
-                <v-col id="img" cols="3" :class="`${color.name}`">
-                  <poke-image :id="data.id" :color="color.name" />
+                <v-col id="img" cols="3" :class="`${getColor(color.name)}`">
+                  <poke-image :id="data.id" :color="getColor(color.name)" />
                 </v-col>
               </v-row>
             </template>
@@ -87,7 +89,7 @@ export default {
     Type
   },
   props: {
-    pokemons: { required: true, type: Object },
+    pokemons: { required: true, type: [Object, Array] },
     limit: { required: true, type: Number }
   },
   data() {
@@ -99,7 +101,7 @@ export default {
   },
   computed: {
     numberOfPages() {
-      return Math.floor(this.pokemons.count / this.limit)
+      return Math.ceil(this.pokemons.count / this.limit)
     }
   },
   methods: {
@@ -116,11 +118,19 @@ export default {
     attack(stats) {
       return stats.find((el) => el.stat.name === 'attack').base_stat
     },
-    cols(numberOfItems) {
-      return (numberOfItems === 1 && 8) || (numberOfItems === 2 && 4)
-    },
     onIntersect(entries) {
       this.$emit('paginationWasIntersected', entries[0].isIntersecting)
+    },
+    getColor(name) {
+      switch (name) {
+        case 'white':
+          return 'blue-grey'
+        case 'gray':
+        case 'black':
+          return 'grey'
+        default:
+          return name
+      }
     }
   }
 }

@@ -1,3 +1,4 @@
 export default () => ({
-  pokemon: null
+  pokemon: null,
+  pokemons: {}
 })

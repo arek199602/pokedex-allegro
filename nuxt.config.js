@@ -87,5 +87,8 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {}
+  },
+  babel: {
+    plugins: [['@babel/plugin-proposal-optional-chaining']]
   }
 }

@@ -1,9 +1,9 @@
 <template>
-  <v-autocomplete
+  <v-combobox
+    ref="autocomplete"
     v-model="model"
     append-icon=""
     :items="items"
-    :loading="isLoading"
     :search-input.sync="search"
     hide-no-data
     hide-selected
@@ -21,22 +21,19 @@
     color="#033"
     background-color="transparent"
     @change="selectPokemon"
-  ></v-autocomplete>
+  ></v-combobox>
 </template>
 
 <script>
+import { debounce } from 'debounce'
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('pokemon')
 export default {
   name: 'Autocomplete',
-  props: {
-    map: { type: Object, default: () => {} }
-  },
   data() {
     return {
       descriptionLimit: 60,
       entries: [],
-      isLoading: false,
       model: null,
       search: null
     }
@@ -66,17 +63,20 @@ export default {
   watch: {
     search(val) {
       this.isLoading = true
-
       // Lazily load input items
       this.searchPokemon()
+
+      this.setPokemons(this.pokemonObject())
     },
     model() {
       console.log('model changed')
     }
   },
-  created() {},
+  created() {
+    this.setPokemons = debounce(this.setPokemons, 500)
+  },
   methods: {
-    ...mapActions(['setPokemon']),
+    ...mapActions(['setPokemon', 'setPokemons']),
     async searchPokemon() {
       const res = await this.$axios.get('/pokemon/?limit=964')
       const { count, results } = res.data
@@ -84,8 +84,23 @@ export default {
       this.entries = results
     },
     selectPokemon(pokemon) {
-      this.setPokemon({ ...pokemon })
-      this.$router.push('/details')
+      if (typeof pokemon === 'object') {
+        this.setPokemon({ ...pokemon })
+        this.$router.push('/details')
+      }
+    },
+    pokemonObject() {
+      if (this.search) {
+        return {
+          results: this.$refs.autocomplete.filteredItems,
+          count: this.$refs.autocomplete.filteredItems.length
+        }
+      } else {
+        return {
+          reults: [],
+          count: 0
+        }
+      }
     }
   }
 }
