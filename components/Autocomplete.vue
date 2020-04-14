@@ -17,13 +17,16 @@
     hide-details
     solo
     flat
-    color="rgba(255, 255, 255, 0.5)"
+    autofocus
+    color="#033"
     background-color="transparent"
     @change="selectPokemon"
   ></v-autocomplete>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+const { mapActions } = createNamespacedHelpers('pokemon')
 export default {
   name: 'Autocomplete',
   props: {
@@ -73,6 +76,7 @@ export default {
   },
   created() {},
   methods: {
+    ...mapActions(['setPokemon']),
     async searchPokemon() {
       const res = await this.$axios.get('/pokemon/?limit=964')
       const { count, results } = res.data
@@ -80,7 +84,8 @@ export default {
       this.entries = results
     },
     selectPokemon(pokemon) {
-      console.log('Selected pokemon: ', pokemon)
+      this.setPokemon({ ...pokemon })
+      this.$router.push('/details')
     }
   }
 }

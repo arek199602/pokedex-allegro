@@ -7,7 +7,7 @@
           type="list-item-three-line"
         ></v-skeleton-loader>
       </slot>
-      <slot v-if="!isPending" name="component" :response="data" />
+      <slot v-if="data" name="component" :response="data" />
       <template slot="error">
         <p v-if="error">Error: {{ error.message }}</p>
       </template>

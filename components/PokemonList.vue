@@ -33,50 +33,16 @@
                       class="d-flex justify-space-between px-1"
                       offset="2"
                     >
-                      <v-icon
-                        v-if="isStarActive(data.id)"
-                        :color="`${color.name} darken-3`"
-                        @click="switchStar(data.id, false)"
-                      >
-                        mdi-star
-                      </v-icon>
-                      <v-icon
-                        v-else
-                        :color="`${color.name} darken-3`"
-                        @click="switchStar(data.id, true)"
-                      >
-                        mdi-star-outline
-                      </v-icon>
-                      <v-icon
-                        v-if="isCircleActive(data.id)"
-                        :color="`${color.name} darken-3`"
-                        @click="switchCircle(data.id, false)"
-                      >
-                        mdi-checkbox-marked-circle
-                      </v-icon>
-                      <v-icon
-                        v-else
-                        :color="`${color.name} darken-3`"
-                        @click="switchCircle(data.id, true)"
-                      >
-                        mdi-checkbox-blank-circle-outline
-                      </v-icon>
+                      <icons :id="data.id" :color="color.name" />
                     </v-col>
                   </v-row>
                   <v-row no-gutters dense>
                     <v-col
-                      v-for="(item, index) in data.types"
-                      :key="index"
+                      v-for="item in data.types"
+                      :key="item.type.name"
                       :cols="cols(data.types.length)"
                     >
-                      <v-chip
-                        small
-                        outlined
-                        :color="`${color.name} darken-4`"
-                        class="d-flex justify-center mx-2 text-uppercase"
-                      >
-                        {{ item.type.name }}
-                      </v-chip>
+                      <type :color="color.name" :name="item.type.name" />
                     </v-col>
                     <v-col cols="3">
                       <v-chip small dark :color="`${color.name} darken-2`">
@@ -86,29 +52,7 @@
                   </v-row>
                 </v-col>
                 <v-col id="img" cols="3" :class="`${color.name}`">
-                  <v-img
-                    height="64"
-                    contain
-                    position="center center"
-                    :class="`${color.name} lighten-3`"
-                    class="pokemon-img"
-                    :src="
-                      `https://pokeres.bastionbot.org/images/pokemon/${data.id}.png`
-                    "
-                  >
-                    <template v-slot:placeholder>
-                      <v-row
-                        class="fill-height ma-0"
-                        align="center"
-                        justify="center"
-                      >
-                        <v-progress-circular
-                          indeterminate
-                          color="grey lighten-5"
-                        ></v-progress-circular>
-                      </v-row>
-                    </template>
-                  </v-img>
+                  <poke-image :id="data.id" :color="color.name" />
                 </v-col>
               </v-row>
             </template>
@@ -131,10 +75,16 @@
 
 <script>
 import FetchJson from './FetchJson'
+import Icons from './pokemon/Icons'
+import PokeImage from './pokemon/PokeImage'
+import Type from './pokemon/Type'
 export default {
   name: 'PokemonList',
   components: {
-    FetchJson
+    FetchJson,
+    PokeImage,
+    Icons,
+    Type
   },
   props: {
     pokemons: { required: true, type: Object },
@@ -153,25 +103,15 @@ export default {
     }
   },
   methods: {
-    switchStar(id, active) {
-      const star = this.stars.find((star) => star.id === id)
-      star !== undefined
-        ? (star.active = active)
-        : this.stars.push({ id, active })
+    switchIcon(id, type) {
+      const icon = this[type].find((icon) => icon.id === id)
+      icon !== undefined
+        ? (icon.active = !icon.active)
+        : this[type].push({ id, active: true })
     },
-    isStarActive(id) {
-      const star = this.stars.find((star) => star.id === id)
-      return star !== undefined ? star.active : false
-    },
-    switchCircle(id, active) {
-      const circle = this.circles.find((circle) => circle.id === id)
-      circle !== undefined
-        ? (circle.active = active)
-        : this.circles.push({ id, active })
-    },
-    isCircleActive(id) {
-      const circle = this.circles.find((circle) => circle.id === id)
-      return circle !== undefined ? circle.active : false
+    isIconActive(id, type) {
+      const icon = this[type].find((icon) => icon.id === id)
+      return icon !== undefined ? icon.active : false
     },
     attack(stats) {
       return stats.find((el) => el.stat.name === 'attack').base_stat
@@ -197,9 +137,9 @@ export default {
   #img {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+    ::v-deep .pokemon-img {
+      border-radius: 50% 8px 8px 50%;
+    }
   }
-}
-.pokemon-img {
-  border-radius: 50% 8px 8px 50%;
 }
 </style>
