@@ -8,7 +8,7 @@
     </v-app-bar-nav-icon>
 
     <autocomplete v-if="isFilterOpen" />
-    <v-toolbar-title v-else>Pokedex</v-toolbar-title>
+    <v-toolbar-title v-else @click="$router.push('/')">Pokedex</v-toolbar-title>
 
     <v-spacer></v-spacer>
 

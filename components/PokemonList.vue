@@ -6,10 +6,14 @@
         :key="index"
         :url="pokemon.url"
       >
-        <template v-slot:component="{ response: { data } }">
-          <fetch-json :url="data.species.url">
+        <template v-slot:component="{ response: { data: pokemonDetails } }">
+          <fetch-json :url="pokemonDetails.species.url">
             <template v-slot:component="{ response: { data: { color } } }">
-              <v-row no-gutters>
+              <v-row
+                no-gutters
+                @click="showPokemon(pokemon)"
+                class="list-element"
+              >
                 <v-col id="info" cols="9" :class="getColor(color.name)">
                   <v-row no-gutters dense justify="space-between">
                     <v-col cols="auto">
@@ -17,26 +21,33 @@
                         class="mx-2"
                         :class="`${getColor(color.name)}--text text--darken-4`"
                       >
-                        #{{ String(data.id).padStart(3, '0') }}
+                        #{{ String(pokemonDetails.id) }}
                       </span>
                     </v-col>
-                    <v-col cols="5">
-                      <span
-                        class="text-uppercase"
-                        :class="`${getColor(color.name)}--text text--darken-4`"
-                      >
-                        {{ data.name }}
+                    <v-col
+                      cols="5"
+                      class="ellipsis"
+                      :class="`${getColor(color.name)}--text text--darken-4`"
+                    >
+                      <span class="text-uppercase">
+                        {{ pokemonDetails.name }}
                       </span>
                     </v-col>
                     <v-col
                       cols="auto"
                       class="d-flex justify-space-between px-1"
                     >
-                      <icons :id="data.id" :color="getColor(color.name)" />
+                      <icons
+                        :id="pokemonDetails.id"
+                        :color="getColor(color.name)"
+                      />
                     </v-col>
                   </v-row>
                   <v-row no-gutters dense justify="space-between">
-                    <v-col v-for="item in data.types" :key="item.type.name">
+                    <v-col
+                      v-for="item in pokemonDetails.types"
+                      :key="item.type.name"
+                    >
                       <type
                         :color="getColor(color.name)"
                         :name="item.type.name"
@@ -48,13 +59,16 @@
                         dark
                         :color="`${getColor(color.name)} darken-2`"
                       >
-                        Atak: {{ attack(data.stats) }}
+                        Atak: {{ attack(pokemonDetails.stats) }}
                       </v-chip>
                     </v-col>
                   </v-row>
                 </v-col>
                 <v-col id="img" cols="3" :class="`${getColor(color.name)}`">
-                  <poke-image :id="data.id" :color="getColor(color.name)" />
+                  <poke-image
+                    :id="pokemonDetails.id"
+                    :color="getColor(color.name)"
+                  />
                 </v-col>
               </v-row>
             </template>
@@ -68,6 +82,7 @@
           v-model="page"
           v-intersect="onIntersect"
           :length="numberOfPages"
+          :total-visible="7"
           @input="$emit('pageChanged', $event)"
         ></v-pagination>
       </div>
@@ -76,16 +91,19 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
 import FetchJson from './FetchJson'
 import Icons from './pokemon/Icons'
 import PokeImage from './pokemon/PokeImage'
 import Type from './pokemon/Type'
+const { mapActions } = createNamespacedHelpers('pokemon')
+
 export default {
   name: 'PokemonList',
   components: {
     FetchJson,
-    PokeImage,
     Icons,
+    PokeImage,
     Type
   },
   props: {
@@ -101,10 +119,15 @@ export default {
   },
   computed: {
     numberOfPages() {
-      return Math.ceil(this.pokemons.count / this.limit)
+      return Math.floor(this.pokemons.count / this.limit)
     }
   },
   methods: {
+    ...mapActions(['setPokemon']),
+    showPokemon(pokemon) {
+      this.setPokemon(pokemon)
+      this.$router.push('/details')
+    },
     switchIcon(id, type) {
       const icon = this[type].find((icon) => icon.id === id)
       icon !== undefined
@@ -150,6 +173,18 @@ export default {
     ::v-deep .pokemon-img {
       border-radius: 50% 8px 8px 50%;
     }
+  }
+  .ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.row.list-element {
+  cursor: pointer;
+  ::v-deep span {
+    cursor: pointer;
   }
 }
 </style>

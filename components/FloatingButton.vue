@@ -1,5 +1,5 @@
 <template>
-  <v-speed-dial v-model="open" fixed bottom right>
+  <v-speed-dial ref="speedDial" v-model="open" fixed bottom right>
     <template v-slot:activator>
       <v-btn color="#40637f" dark fab :class="animation">
         <v-icon v-if="open">mdi-close</v-icon>
@@ -36,6 +36,17 @@ export default {
       return {
         hide: this.hide,
         show: !this.hide
+      }
+    }
+  },
+  watch: {
+    hide(newVal) {
+      if (newVal) {
+        setTimeout(() => {
+          this.$refs.speedDial.$el.style.display = 'none'
+        }, 600)
+      } else {
+        this.$refs.speedDial.$el.style.display = 'block'
       }
     }
   },
