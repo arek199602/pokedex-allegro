@@ -35,23 +35,10 @@
 </template>
 
 <script>
-import Icons from '../pokemon/Icons'
-import PokeImage from './PokeImage'
-import Type from './Type'
-import { colors } from '~/mixins/colors'
+import { pokemon } from '~/mixins/pokemon'
 export default {
   name: 'GridTemplate',
-  components: {
-    PokeImage,
-    Icons,
-    Type
-  },
-  mixins: [colors],
-  props: {
-    pokemonDetails: { required: true, type: Object },
-    color: { required: true, type: String },
-    attack: { required: true, type: Function }
-  },
+  mixins: [pokemon],
   computed: {
     maxWidth() {
       return this.$vuetify.breakpoint.xs ? '300' : '250'

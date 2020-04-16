@@ -43,24 +43,11 @@
 </template>
 
 <script>
-import Icons from '../pokemon/Icons'
-import PokeImage from '../pokemon/PokeImage'
-import Type from '../pokemon/Type'
-import { colors } from '~/mixins/colors'
+import { pokemon } from '~/mixins/pokemon'
 
 export default {
   name: 'ListTemplate',
-  components: {
-    Icons,
-    PokeImage,
-    Type
-  },
-  mixins: [colors],
-  props: {
-    pokemonDetails: { required: true, type: Object },
-    color: { required: true, type: String },
-    attack: { required: true, type: Function }
-  }
+  mixins: [pokemon]
 }
 </script>
 
