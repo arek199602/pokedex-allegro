@@ -1,7 +1,7 @@
 <template>
   <v-app-bar color="white" app clipped dense>
     <v-app-bar-nav-icon v-if="!isFilterOpen" @click="$emit('toggleDrawer')" />
-    <v-app-bar-nav-icon v-else @click="openFilter(false)">
+    <v-app-bar-nav-icon v-else @click="closeFilter">
       <v-icon>
         mdi-arrow-left
       </v-icon>
@@ -50,6 +50,7 @@
 import { createNamespacedHelpers } from 'vuex'
 import Autocomplete from './Autocomplete'
 const { mapGetters, mapActions } = createNamespacedHelpers('filter')
+const pokemonModule = createNamespacedHelpers('pokemon')
 export default {
   name: 'AppBar',
   components: {
@@ -77,7 +78,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['openFilter'])
+    ...mapActions(['openFilter', 'cleanFilter']),
+    ...pokemonModule.mapActions(['setPokemons']),
+    closeFilter() {
+      this.openFilter(false)
+      this.cleanFilter('nameFilter')
+      this.setPokemons([])
+    }
   }
 }
 </script>

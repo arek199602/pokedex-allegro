@@ -4,5 +4,8 @@ export default {
   },
   openFilter({ commit }, isOpen) {
     commit('OPEN_FILTER', isOpen)
+  },
+  cleanFilter({ commit }, type) {
+    commit('CLEAN_FILTER', type)
   }
 }

@@ -4,5 +4,8 @@ export default {
   },
   OPEN_FILTER(state, isOpen) {
     state.open = isOpen
+  },
+  CLEAN_FILTER(state, type) {
+    state[type].data = ''
   }
 }

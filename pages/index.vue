@@ -11,7 +11,9 @@
             <v-pagination
               v-model="page"
               v-intersect="onIntersect"
-              :length="numberOfPages(notFilteredPokemons.count)"
+              :length="
+                numberOfPages(pokemons(notFilteredPokemons, slicesParams).count)
+              "
               :total-visible="7"
               @input="changePage"
             ></v-pagination>
