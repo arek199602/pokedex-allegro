@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <v-card max-width="300" @click="$emit('showPokemon')">
+    <v-card :max-width="maxWidth" @click="$emit('showPokemon')">
       <poke-image
         :id="pokemonDetails.id"
         :color="getColor(color)"
@@ -51,6 +51,11 @@ export default {
     pokemonDetails: { required: true, type: Object },
     color: { required: true, type: String },
     attack: { required: true, type: Function }
+  },
+  computed: {
+    maxWidth() {
+      return this.$vuetify.breakpoint.xs ? '300' : '250'
+    }
   }
 }
 </script>

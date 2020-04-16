@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       url: '/pokemon/?limit=21',
-      limit: 21,
+      limit: 40,
       toggleFloatingButton: false,
       slicesParams: [],
       page: 1
@@ -55,6 +55,7 @@ export default {
   },
   created() {
     this.slicesParams = [0, this.limit]
+    this.url = `/pokemon/?limit=${40}`
   },
   methods: {
     changeUrl(page) {
