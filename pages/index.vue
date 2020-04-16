@@ -2,10 +2,7 @@
   <v-container>
     <fetch-json :url="url">
       <template v-slot:component="{ response: { data: notFilteredPokemons } }">
-        <pokemon-list
-          :limit="limit"
-          :pokemons="pokemons(notFilteredPokemons, slicesParams)"
-        />
+        <pokemon-list :pokemons="pokemons(notFilteredPokemons, slicesParams)" />
         <portal to="pagination">
           <div class="text-center">
             <v-pagination
@@ -41,8 +38,8 @@ export default {
   },
   data() {
     return {
-      url: '/pokemon/?limit=21',
-      limit: 24,
+      url: '',
+      limit: 10,
       toggleFloatingButton: false,
       slicesParams: [],
       page: 1
@@ -52,8 +49,8 @@ export default {
     ...mapState({
       filteredPokemons: 'pokemons'
     }),
-    sm() {
-      return this.$vuetify.breakpoint.sm
+    xs() {
+      return this.$vuetify.breakpoint.xs
     },
     md() {
       return this.$vuetify.breakpoint.md
@@ -66,7 +63,7 @@ export default {
     }
   },
   watch: {
-    sm: {
+    xs: {
       immediate: true,
       handler(newVal) {
         newVal && (this.limit = 20)
@@ -100,7 +97,8 @@ export default {
       if (page === 1) {
         this.url = '/pokemon'
       } else {
-        this.url = `/pokemon/?limit=${this.limit}&offset=${this.limit * page}`
+        this.url = `/pokemon/?limit=${this.limit}&offset=${this.limit *
+          (page - 1)}`
       }
     },
     changePage(page) {

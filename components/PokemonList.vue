@@ -45,8 +45,7 @@ export default {
     ListTemplate
   },
   props: {
-    pokemons: { required: true, type: [Object, Array] },
-    limit: { required: true, type: Number }
+    pokemons: { required: true, type: [Object, Array] }
   },
   data() {
     return {
