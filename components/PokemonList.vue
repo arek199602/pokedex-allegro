@@ -12,16 +12,16 @@
               v-if="listType === 'view-list'"
               :pokemon-details="pokemonDetails"
               :color="color.name"
-              :attack="attack"
               @showPokemon="showPokemon(pokemon)"
             />
-            <grid-template
-              v-else
-              :pokemon-details="pokemonDetails"
-              :color="color.name"
-              :attack="attack"
-              @showPokemon="showPokemon(pokemon)"
-            />
+            <v-col v-else>
+              <grid-template
+                :pokemon-details="pokemonDetails"
+                :color="color.name"
+                :max-width="maxWidth"
+                @showPokemon="showPokemon(pokemon)"
+              />
+            </v-col>
           </template>
         </fetch-json>
       </template>
@@ -62,6 +62,9 @@ export default {
         'justify-center': this.listType === 'grid-outline',
         'no-gutters': this.listType === 'grid-outline'
       }
+    },
+    maxWidth() {
+      return this.$vuetify.breakpoint.xs ? '300' : '250'
     }
   },
   methods: {
@@ -79,9 +82,6 @@ export default {
     isIconActive(id, type) {
       const icon = this[type].find((icon) => icon.id === id)
       return icon !== undefined ? icon.active : false
-    },
-    attack(stats) {
-      return stats.find((el) => el.stat.name === 'attack').base_stat
     }
   }
 }

@@ -9,9 +9,11 @@ export const pokemon = {
     Type
   },
   props: {
-    pokemonDetails: { required: true, type: Object },
-    color: { required: true, type: String },
-    attack: { required: true, type: Function }
+    pokemonDetails: {
+      type: Object,
+      default: () => ({})
+    },
+    color: { type: String, default: '' }
   },
   methods: {
     getColor(name) {
@@ -24,6 +26,9 @@ export const pokemon = {
         default:
           return name
       }
+    },
+    attack(stats) {
+      return stats.find((el) => el.stat.name === 'attack').base_stat
     }
   }
 }
