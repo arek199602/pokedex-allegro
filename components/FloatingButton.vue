@@ -50,6 +50,9 @@ export default {
         hide: this.hide,
         show: !this.hide
       }
+    },
+    xs() {
+      return this.$vuetify.breakpoint.xs
     }
   },
   watch: {
@@ -60,6 +63,11 @@ export default {
         }, 600)
       } else {
         this.$refs.speedDial.$el.style.display = 'block'
+      }
+    },
+    xs(newVal) {
+      if (!newVal) {
+        this.setListType('grid-outline')
       }
     }
   },

@@ -60,6 +60,9 @@ export default {
     },
     lg() {
       return this.$vuetify.breakpoint.lg
+    },
+    xl() {
+      return this.$vuetify.breakpoint.xl
     }
   },
   watch: {
@@ -72,13 +75,19 @@ export default {
     md: {
       immediate: true,
       handler(newVal) {
-        newVal && (this.limit = 21)
+        newVal && (this.limit = 25)
       }
     },
     lg: {
       immediate: true,
       handler(newVal) {
-        newVal && (this.limit = 24)
+        newVal && (this.limit = 30)
+      }
+    },
+    xl: {
+      immediate: true,
+      handler(newVal) {
+        newVal && (this.limit = 35)
       }
     }
   },

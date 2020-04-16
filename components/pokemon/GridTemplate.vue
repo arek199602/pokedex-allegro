@@ -15,7 +15,7 @@
 
     <v-card-subtitle>
       <v-chip small dark :color="`${getColor(color)} darken-2`">
-        Atak: {{ attack(pokemonDetails.stats) }}
+        Attack: {{ attack(pokemonDetails.stats) }}
       </v-chip>
     </v-card-subtitle>
 

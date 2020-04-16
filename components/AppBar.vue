@@ -89,4 +89,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.v-toolbar__title {
+  cursor: pointer;
+}
+</style>

@@ -31,7 +31,7 @@
         </v-col>
         <v-col cols="auto">
           <v-chip small dark :color="`${getColor(color)} darken-2`">
-            Atak: {{ attack(pokemonDetails.stats) }}
+            Attack: {{ attack(pokemonDetails.stats) }}
           </v-chip>
         </v-col>
       </v-row>

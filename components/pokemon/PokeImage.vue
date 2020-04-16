@@ -5,7 +5,7 @@
         :height="height"
         contain
         position="center center"
-        :class="`${color} lighten-3`"
+        :class="backgroundColor"
         class="pokemon-img"
         :lazy-src="lazySrc"
         :src="src"
@@ -28,7 +28,7 @@ export default {
   name: 'PokeImage',
   props: {
     id: { required: true, type: Number },
-    color: { required: true, type: String },
+    color: { type: String, default: '' },
     height: { type: String, default: '64' }
   },
   computed: {
@@ -37,6 +37,9 @@ export default {
     },
     lazySrc() {
       return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${this.id}.png`
+    },
+    backgroundColor() {
+      return this.color.length && `${this.color} lighten-3`
     }
   }
 }
