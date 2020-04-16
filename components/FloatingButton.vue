@@ -6,21 +6,32 @@
         <v-icon v-else>mdi-pokeball</v-icon>
       </v-btn>
     </template>
-    <v-btn fab small>
-      <v-icon>mdi-magnify</v-icon>
+    <v-btn fab small @click="$vuetify.goTo(0)">
+      <v-icon>mdi-chevron-up</v-icon>
     </v-btn>
     <v-btn fab small @click="openFilter(true)">
-      <v-icon>mdi-filter</v-icon>
+      <v-icon>mdi-magnify</v-icon>
     </v-btn>
-    <v-btn fab small>
-      <v-icon>mdi-sort</v-icon>
-    </v-btn>
+    <template v-if="$vuetify.breakpoint.xs">
+      <v-btn
+        v-if="listType === 'view-list'"
+        fab
+        small
+        @click="setListType('grid-outline')"
+      >
+        <v-icon>mdi-view-list</v-icon>
+      </v-btn>
+      <v-btn v-else fab small @click="setListType('view-list')">
+        <v-icon>mdi-view-grid-outline</v-icon>
+      </v-btn>
+    </template>
   </v-speed-dial>
 </template>
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('filter')
+const listTypeModule = createNamespacedHelpers('listType')
 export default {
   name: 'FloatingButton',
   props: {
@@ -28,10 +39,12 @@ export default {
   },
   data() {
     return {
-      open: false
+      open: false,
+      toggleViewList: false
     }
   },
   computed: {
+    ...listTypeModule.mapState(['listType']),
     animation() {
       return {
         hide: this.hide,
@@ -51,7 +64,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['openFilter'])
+    ...mapActions(['openFilter']),
+    ...listTypeModule.mapActions(['setListType'])
   }
 }
 </script>

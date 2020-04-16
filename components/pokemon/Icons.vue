@@ -4,28 +4,28 @@
       <v-icon
         v-if="isIconActive(id, 'stars')"
         :color="`${color} darken-3`"
-        @click="switchIcon(id, 'stars')"
+        @click.stop="switchIcon(id, 'stars')"
       >
         mdi-star
       </v-icon>
       <v-icon
         v-else
         :color="`${color} darken-3`"
-        @click="switchIcon(id, 'stars')"
+        @click.stop="switchIcon(id, 'stars')"
       >
         mdi-star-outline
       </v-icon>
       <v-icon
         v-if="isIconActive(id, 'circles')"
         :color="`${color} darken-3`"
-        @click="switchIcon(id, 'circles')"
+        @click.stop="switchIcon(id, 'circles')"
       >
         mdi-checkbox-marked-circle
       </v-icon>
       <v-icon
         v-else
         :color="`${color} darken-3`"
-        @click="switchIcon(id, 'circles')"
+        @click.stop="switchIcon(id, 'circles')"
       >
         mdi-checkbox-blank-circle-outline
       </v-icon>

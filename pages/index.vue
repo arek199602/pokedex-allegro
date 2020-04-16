@@ -1,21 +1,27 @@
 <template>
-  <v-row no-gutters>
-    <v-col>
-      <fetch-json :url="url">
-        <template
-          v-slot:component="{ response: { data: notFilteredPokemons } }"
-        >
-          <pokemon-list
-            :limit="limit"
-            :pokemons="pokemons(notFilteredPokemons, slicesParams)"
-            @pageChanged="changePage"
-            @paginationWasIntersected="toggleFloatingButton = $event"
-          />
-        </template>
-      </fetch-json>
-      <floating-button :hide="toggleFloatingButton" />
-    </v-col>
-  </v-row>
+  <div>
+    <fetch-json :url="url">
+      <template v-slot:component="{ response: { data: notFilteredPokemons } }">
+        <pokemon-list
+          :limit="limit"
+          :pokemons="pokemons(notFilteredPokemons, slicesParams)"
+        />
+        <portal to="pagination">
+          <div class="text-center">
+            <v-pagination
+              v-model="page"
+              v-intersect="onIntersect"
+              :length="numberOfPages(notFilteredPokemons.count)"
+              :total-visible="7"
+              @input="changePage"
+            ></v-pagination>
+          </div>
+        </portal>
+      </template>
+    </fetch-json>
+    <portal-target name="pagination" />
+    <floating-button :hide="toggleFloatingButton" />
+  </div>
 </template>
 
 <script>
@@ -33,10 +39,11 @@ export default {
   },
   data() {
     return {
-      url: '/pokemon',
-      limit: 20,
+      url: '/pokemon/?limit=21',
+      limit: 21,
       toggleFloatingButton: false,
-      slicesParams: []
+      slicesParams: [],
+      page: 1
     }
   },
   computed: {
@@ -64,7 +71,6 @@ export default {
     },
     pokemons(notFilteredPokemons, slicesParams = [0, this.limit]) {
       if (this.filteredPokemons.results?.length) {
-        console.log('here i am')
         return {
           results: this.filteredPokemons.results.slice(
             slicesParams[0],
@@ -75,6 +81,12 @@ export default {
       } else {
         return notFilteredPokemons
       }
+    },
+    onIntersect(entries) {
+      this.toggleFloatingButton = entries[0].isIntersecting
+    },
+    numberOfPages(pokemonCount) {
+      return Math.floor(pokemonCount / this.limit)
     }
   }
 }

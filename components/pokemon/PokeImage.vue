@@ -2,12 +2,13 @@
   <div>
     <slot>
       <v-img
-        height="64"
+        :height="height"
         contain
         position="center center"
         :class="`${color} lighten-3`"
         class="pokemon-img"
-        :src="`https://pokeres.bastionbot.org/images/pokemon/${id}.png`"
+        :lazy-src="lazySrc"
+        :src="src"
       >
         <template v-slot:placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">
@@ -27,7 +28,16 @@ export default {
   name: 'PokeImage',
   props: {
     id: { required: true, type: Number },
-    color: { required: true, type: String }
+    color: { required: true, type: String },
+    height: { type: String, default: '64' }
+  },
+  computed: {
+    src() {
+      return `https://pokeres.bastionbot.org/images/pokemon/${this.id}.png`
+    },
+    lazySrc() {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${this.id}.png`
+    }
   }
 }
 </script>
