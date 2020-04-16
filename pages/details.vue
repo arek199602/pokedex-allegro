@@ -1,13 +1,15 @@
 <template>
-  <fetch-json :url="url">
-    <template v-slot:component="{ response: { data: pokemon } }">
-      <fetch-json :url="pokemon.species.url">
-        <template v-slot:component="{ response: { data: species } }">
-          {{ description(species.flavor_text_entries) }}
-        </template>
-      </fetch-json>
-    </template>
-  </fetch-json>
+  <v-container>
+    <fetch-json :url="url">
+      <template v-slot:component="{ response: { data: pokemon } }">
+        <fetch-json :url="pokemon.species.url">
+          <template v-slot:component="{ response: { data: species } }">
+            {{ description(species.flavor_text_entries) }}
+          </template>
+        </fetch-json>
+      </template>
+    </fetch-json>
+  </v-container>
 </template>
 
 <script>

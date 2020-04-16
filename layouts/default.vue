@@ -4,9 +4,7 @@
     <app-bar @toggleDrawer="drawer = !drawer" />
 
     <v-content>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-content>
   </v-app>
 </template>
